@@ -16,11 +16,11 @@ export const auth = (req: any, res: Response, next: NextFunction) => {
     return res.status(401).json({ message: "No token provided" })
   }
 
-  const decode = jwt.verify(token, process.env.JWT_SECRET || "")
-  if (!decode) {
+  try {
+    const decode = jwt.verify(token, process.env.JWT_SECRET || "")
+    req["authUser"] = decode
+    next()
+  } catch (error) {
     return res.status(401).json({ message: "Unauthorized" })
   }
-
-  req["authUser"] = decode
-  next()
 }
