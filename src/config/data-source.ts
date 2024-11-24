@@ -1,6 +1,7 @@
 import { DataSource } from "typeorm"
 import { User } from "../schemas/User"
 import "dotenv/config"
+import {Submission} from "../schemas/Submission";
 
 /**
  * Initializes a new TypeORM DataSource instance for connecting to a MySQL database.
@@ -28,7 +29,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: true,
   logging: false,
-  entities: [User],
+  entities: [User, Submission],
   subscribers: [],
   migrations: [],
 })

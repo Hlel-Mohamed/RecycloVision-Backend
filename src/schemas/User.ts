@@ -1,11 +1,10 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  BaseEntity,
-  CreateDateColumn,
-  UpdateDateColumn,
-  OneToMany,
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    BaseEntity,
+    CreateDateColumn,
+    UpdateDateColumn,
 } from "typeorm"
 
 /**
@@ -14,78 +13,87 @@ import {
  * @class
  * @extends BaseEntity
  */
-@Entity({ name: "users" })
+@Entity({name: "users"})
 export class User extends BaseEntity {
-  /**
-   * Unique identifier for the user.
-   *
-   * @type {string}
-   */
-  @PrimaryGeneratedColumn("uuid")
-  id: string
+    /**
+     * Unique identifier for the user.
+     *
+     * @type {string}
+     */
+    @PrimaryGeneratedColumn("uuid")
+    id: string
 
-  /**
-   * First name of the user.
-   *
-   * @type {string}
-   */
-  @Column({ nullable: false })
-  firstName: string
+    /**
+     * First name of the user.
+     *
+     * @type {string}
+     */
+    @Column({nullable: false})
+    firstName: string
 
-  /**
-   * Last name of the user.
-   *
-   * @type {string}
-   */
-  @Column({ nullable: false })
-  lastName: string
+    /**
+     * Last name of the user.
+     *
+     * @type {string}
+     */
+    @Column({nullable: false})
+    lastName: string
 
-  /**
-   * Phone number of the user.
-   *
-   * @type {string}
-   */
-  @Column({ nullable: false })
-  phone: string
+    /**
+     * Phone number of the user.
+     *
+     * @type {string}
+     */
+    @Column({nullable: false})
+    phone: string
 
-  /**
-   * Email address of the user.
-   *
-   * @type {string}
-   */
-  @Column({ nullable: false })
-  email: string
+    /**
+     * Email address of the user.
+     *
+     * @type {string}
+     */
+    @Column({nullable: false})
+    email: string
 
-  /**
-   * Encrypted password of the user.
-   *
-   * @type {string}
-   */
-  @Column({ nullable: false })
-  password: string
+    /**
+     * Encrypted password of the user.
+     *
+     * @type {string}
+     */
+    @Column({nullable: false})
+    password: string
 
-  /**
-   * Role of the user (e.g., Recycler, Admin).
-   *
-   * @type {string}
-   * @default "Recycler"
-   */
-  @Column({ default: "Recycler" })
-  role: string
+    /**
+     * Role of the user (e.g., Recycler, Admin).
+     *
+     * @type {string}
+     * @default "Recycler"
+     */
+    @Column({default: "Recycler"})
+    role: string
 
-  /**
-   * Timestamp when the user was created.
-   *
-   * @type {Date}
-   */
-  @CreateDateColumn()
-  createdAt: Date
+    /**
+     * Wallet points of the user.
+     *
+     * @type {number}
+     * @default 0
+     */
+    @Column({type: "int", default: 0})
+    walletPoints: number
 
-  /**
-   * Timestamp when the user was last updated.
-   *
-   * @type {Date}
-   */
-  @UpdateDateColumn()
-  updatedAt: Date
+    /**
+     * Timestamp when the user was created.
+     *
+     * @type {Date}
+     */
+    @CreateDateColumn()
+    createdAt: Date
+
+    /**
+     * Timestamp when the user was last updated.
+     *
+     * @type {Date}
+     */
+    @UpdateDateColumn()
+    updatedAt: Date
 }
