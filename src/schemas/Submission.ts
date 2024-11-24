@@ -5,7 +5,10 @@ import {
     BaseEntity,
     CreateDateColumn,
     UpdateDateColumn,
+    ManyToOne,
+    JoinColumn,
 } from 'typeorm';
+import { User } from './User';
 
 @Entity({ name: 'submissions' })
 export class Submission extends BaseEntity {
@@ -24,12 +27,16 @@ export class Submission extends BaseEntity {
     @Column({ default: 'Pending' })
     status: string;
 
-    @Column({ type: 'blob', nullable: true })
-    imageBlob: Buffer;
-
     @CreateDateColumn()
     createdAt: Date;
 
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @ManyToOne(() => User)
+    @JoinColumn({ name: 'userId' })
+    user: User;
+
+    @Column()
+    userId: string;
 }

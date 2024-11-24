@@ -5,6 +5,8 @@ import { authorization } from "../middleware/authorization"
 
 const router = express.Router()
 
+
+
 /**
  * Route to create a new user.
  *
@@ -17,6 +19,7 @@ const router = express.Router()
  * @param {express.NextFunction} next - The next middleware function.
  */
 router.post("/create", UserController.create)
+
 
 /**
  * Route to add a user.
@@ -147,5 +150,8 @@ router.put("/update/:id", auth, authorization(["Admin"]), UserController.updateU
  * @param {express.NextFunction} next - The next middleware function.
  */
 router.delete("/delete/:id", auth, authorization(["Admin"]), UserController.deleteUser)
+
+router.get('/:id', UserController.getUserById);
+
 
 export default router

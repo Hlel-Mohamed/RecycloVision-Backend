@@ -4,8 +4,8 @@ import { Submission } from '../schemas/Submission';
 export class SubmissionController {
     static async submit(req: Request, res: Response): Promise<Response> {
         try {
-            const { items, images, points } = req.body;
-            if (!items || !images || !points) {
+            const { items, images, points, userId } = req.body;
+            if (!items || !images || !points || !userId) {
                 return res.status(400).json({ message: 'Invalid submission data' });
             }
 
@@ -14,6 +14,7 @@ export class SubmissionController {
             submission.images = images;
             submission.points = points;
             submission.status = 'Pending';
+            submission.userId = userId;
 
             await Submission.save(submission);
 
@@ -26,7 +27,19 @@ export class SubmissionController {
 
     static async getAll(req: Request, res: Response): Promise<Response> {
         try {
-            const submissions = await Submission.find();
+            const submissions = await Submission.createQueryBuilder('submission')
+                .leftJoinAndSelect('submission.user', 'user')
+                .select([
+                    'submission.id',
+                    'submission.items',
+                    'submission.images',
+                    'submission.points',
+                    'submission.status',
+                    'user.firstName',
+                    'user.lastName'
+                ])
+                .getMany();
+
             return res.status(200).json(submissions);
         } catch (error) {
             console.error('Error fetching submissions:', error);
