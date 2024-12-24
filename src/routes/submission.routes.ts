@@ -8,6 +8,8 @@ router.post('/submit', SubmissionController.submit);
 router.get('/all', SubmissionController.getAll);
 router.get('/summary', SubmissionController.getSummary);
 router.get('/stats', RecyclingController.getStats);
+router.get('/total-items/:userId', RecyclingController.getTotalItemsByUser);
 router.get('/recent-activities', SubmissionController.getRecentActivities);
+
 
 export default router;

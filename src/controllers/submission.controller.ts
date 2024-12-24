@@ -100,6 +100,8 @@ export class SubmissionController {
                     message: submission.status === 'Approved'
                         ? `User "${submission.user.firstName} ${submission.user.lastName}" earned ${submission.points} points`
                         : `User "${submission.user.firstName} ${submission.user.lastName}" submitted ${submission.items.length} items`,
+                    items: submission.items,
+                    points: submission.points,
                     date: submission.updatedAt
                 };
             });
