@@ -21,7 +21,7 @@ app.use(cors({ origin: 'http://localhost:5173' }));
 app.use(express.urlencoded({ extended: true }));
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
-app.use('/api', submissionRouter);
+app.use('/api/submissions', submissionRouter);
 app.use('/api/admin', adminRouter);
 
 app.use(errorHandler);
