@@ -48,7 +48,7 @@ pipeline {
     always {
       echo 'This will always run'      
       echo 'Deploying Recyclovision...'
-      sh "env | grep DB_ | grep AWS_ | xargs -I {} bash -c 'export {}; docker compose --project-name recyclovision up -d'"
+      sh 'docker compose --project-name recyclovision up -d'
       echo 'Recyclovision Deployed'
     }
   }
