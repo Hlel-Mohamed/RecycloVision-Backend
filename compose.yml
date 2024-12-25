@@ -56,7 +56,7 @@ services:
       - "80"
     restart: always
     environment:
-      PMA_HOST: mysql
+      PMA_HOST: mysql-r
     depends_on:
       - mysql-r
     networks:
