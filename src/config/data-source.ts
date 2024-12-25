@@ -1,7 +1,7 @@
 import { DataSource } from "typeorm"
 import { User } from "../schemas/User"
 import "dotenv/config"
-import {Submission} from "../schemas/Submission";
+import { Submission } from "../schemas/Submission"
 
 /**
  * Initializes a new TypeORM DataSource instance for connecting to a MySQL database.

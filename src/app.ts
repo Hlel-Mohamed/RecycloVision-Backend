@@ -33,8 +33,8 @@ const createDefaultAdmin = async () => {
   const adminPassword = "admin"
   const existingAdmin = await User.findOne({ where: { email: adminEmail } })
 
-  try {
-    if (!existingAdmin) {
+  if (!existingAdmin) {
+    try {
       const encryptedPassword = await encrypt.encryptpass(adminPassword)
       const admin = new User()
       admin.firstName = "Admin"
@@ -45,11 +45,11 @@ const createDefaultAdmin = async () => {
       admin.role = "Admin"
       await User.save(admin)
       console.log("Default admin user created")
-    } else {
-      console.log("Default admin user already exists")
+    } catch (error) {
+      console.log(error)
     }
-  } catch (error) {
-    console.log(error)
+  } else {
+    console.log("Default admin user already exists")
   }
 }
 
@@ -59,7 +59,7 @@ const createDefaultAdmin = async () => {
 AppDataSource.initialize()
   .then(async () => {
     console.log("Data Source has been initialized!")
-    // await createDefaultAdmin()
+    await createDefaultAdmin()
     app.listen(port, () => {
       console.log(`Example app listening on port ${port}`)
     })
