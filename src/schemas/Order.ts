@@ -16,7 +16,7 @@ export class Order extends BaseEntity {
     id: string;
 
     @Column("simple-json")
-    items: { productId: string; quantity: number; price: number; coins: number }[];
+    items: { productId: string; name: string; quantity: number; price: number; coins: number }[];
 
     @Column({ type: "decimal" })
     totalAmount: number;

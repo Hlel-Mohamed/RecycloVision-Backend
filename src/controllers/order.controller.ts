@@ -62,7 +62,18 @@ export class OrderController {
 
     static async getAllOrders(req: Request, res: Response): Promise<Response> {
         try {
-            const orders = await Order.find();
+            const orders = await Order.createQueryBuilder('order')
+                .leftJoinAndSelect('order.user', 'user')
+                .select([
+                    'order.id',
+                    'order.items',
+                    'order.totalAmount',
+                    'order.totalCoins',
+                    'order.status',
+                    'user.firstName',
+                    'user.lastName'
+                ])
+                .getMany();
             return res.status(200).json(orders);
         } catch (error) {
             console.error('Error fetching orders:', error);
