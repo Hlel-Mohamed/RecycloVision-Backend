@@ -1,10 +1,11 @@
 import express from "express";
 import "reflect-metadata";
-import bodyParser from 'body-parser';
 import userRouter from "./routes/user.routes";
 import authRouter from "./routes/auth.routes";
+import productRouter from "./routes/product.routes";
 import submissionRouter from './routes/submission.routes';
 import adminRouter from './routes/admin.routes';
+import orderRouter from './routes/order.routes';
 import { AppDataSource } from "./config/data-source";
 import "dotenv/config";
 import cors from "cors";
@@ -21,7 +22,9 @@ app.use(cors({ origin: 'http://localhost:5173' }));
 app.use(express.urlencoded({ extended: true }));
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
-app.use('/api', submissionRouter);
+app.use('/api/orders', orderRouter);
+app.use('/api/products', productRouter);
+app.use('/api/submissions', submissionRouter);
 app.use('/api/admin', adminRouter);
 
 app.use(errorHandler);
