@@ -16,13 +16,13 @@ const app = express()
 const port = process.env.PORT || 3000
 
 app.use(express.json({ limit: "10mb" }))
-app.use(cors({ origin: "http://localhost:5173" }))
+app.use(cors({ origin: "http://frontend:80" }))
 
 app.use(express.urlencoded({ extended: true }))
 app.use("/auth", authRouter)
 app.use("/user", userRouter)
+app.use("/admin", adminRouter)
 app.use("/api", submissionRouter)
-app.use("/api/admin", adminRouter)
 
 app.use(errorHandler)
 
