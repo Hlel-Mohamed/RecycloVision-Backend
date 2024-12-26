@@ -34,6 +34,53 @@ describe("UserController", () => {
         });
 
         /**
+         * Test case for successful user creation.
+         * Expects a 200 status code and a success message.
+         */
+        it("Returns 200 and success message if user is created successfully", async () => {
+            const req = {
+                body: {
+                    email: "test@example.com",
+                    phone: "1234567890",
+                    firstName: "John",
+                    lastName: "Doe",
+                    password: "password",
+                },
+            } as Request;
+
+            const res = {
+                status: jest.fn().mockReturnThis(),
+                json: jest.fn(),
+            } as unknown as Response;
+
+            (User.findOne as jest.Mock).mockResolvedValue(null);
+            (encrypt.encryptpass as jest.Mock).mockResolvedValue("encryptedPassword");
+            (User.save as jest.Mock).mockResolvedValue({
+                firstName: "John",
+                lastName: "Doe",
+                email: "test@example.com",
+                phone: "1234567890",
+                role: "Recycler",
+            });
+
+            await UserController.create(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.json).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    message: "User created successfully",
+                    user: expect.objectContaining({
+                        firstName: "John",
+                        lastName: "Doe",
+                        email: "test@example.com",
+                        phone: "1234567890",
+                        role: "Recycler",
+                    }),
+                })
+            );
+        });
+
+        /**
          * Test case for user already existing in the database.
          * Expects a 400 status code and an error message.
          */
