@@ -22,6 +22,7 @@ export class OrderController {
             order.totalAmount = totalAmount;
             order.totalCoins = totalCoins;
             order.userId = userId;
+            order.status = "Pending";
 
             await Order.save(order);
 
@@ -82,6 +83,44 @@ export class OrderController {
             return res.status(200).json({ message: 'Order deleted successfully' });
         } catch (error) {
             console.error('Error deleting order:', error);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+
+    static async validateOrder(req: Request, res: Response): Promise<Response> {
+        try {
+            const { id } = req.params;
+            const order = await Order.findOne({ where: { id } });
+
+            if (!order) {
+                return res.status(404).json({ message: 'Order not found' });
+            }
+
+            order.status = 'Validated';
+            await Order.save(order);
+
+            return res.status(200).json({ message: 'Order validated' });
+        } catch (error) {
+            console.error('Error validating order:', error);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+
+    static async cancelOrder(req: Request, res: Response): Promise<Response> {
+        try {
+            const { id } = req.params;
+            const order = await Order.findOne({ where: { id } });
+
+            if (!order) {
+                return res.status(404).json({ message: 'Order not found' });
+            }
+
+            order.status = 'Canceled';
+            await Order.save(order);
+
+            return res.status(200).json({ message: 'Order canceled' });
+        } catch (error) {
+            console.error('Error canceling order:', error);
             return res.status(500).json({ message: 'Internal server error' });
         }
     }

@@ -112,4 +112,15 @@ export class SubmissionController {
             return res.status(500).json({ message: 'Internal server error' });
         }
     }
+
+    static async getUserSubmissions(req: Request, res: Response): Promise<Response> {
+        try {
+            const { userId } = req.params;
+            const submissions = await Submission.find({ where: { userId } });
+            return res.status(200).json(submissions);
+        } catch (error) {
+            console.error('Error fetching user submissions:', error);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    }
 }

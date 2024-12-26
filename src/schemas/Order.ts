@@ -31,6 +31,9 @@ export class Order extends BaseEntity {
     @Column()
     userId: string;
 
+    @Column()
+    status: string;
+
     @CreateDateColumn()
     createdAt: Date;
 
