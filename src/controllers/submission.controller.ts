@@ -1,14 +1,14 @@
-import { Request, Response } from 'express';
-import { Submission } from '../schemas/Submission';
+import {Request, Response} from 'express';
+import {Submission} from '../schemas/Submission';
 import s3 from '../config/aws-config';
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 
 export class SubmissionController {
     static async submit(req: Request, res: Response): Promise<Response> {
         try {
-            const { items, images, points, userId } = req.body;
+            const {items, images, points, userId} = req.body;
             if (!items || !images || !points || !userId) {
-                return res.status(400).json({ message: 'Invalid submission data' });
+                return res.status(400).json({message: 'Invalid submission data'});
             }
 
             const imageUrls = await Promise.all(images.map(async (image: string) => {
@@ -23,7 +23,7 @@ export class SubmissionController {
                     ContentType: 'image/jpeg',
                 };
 
-                const { Location } = await s3.upload(params).promise();
+                const {Location} = await s3.upload(params).promise();
                 return Location;
             }));
 
@@ -36,10 +36,10 @@ export class SubmissionController {
 
             await Submission.save(submission);
 
-            return res.status(200).json({ message: 'Submission successful' });
+            return res.status(200).json({message: 'Submission successful'});
         } catch (error) {
             console.error('Error submitting:', error);
-            return res.status(500).json({ message: 'Internal server error' });
+            return res.status(500).json({message: 'Internal server error'});
         }
     }
 
@@ -61,6 +61,65 @@ export class SubmissionController {
             return res.status(200).json(submissions);
         } catch (error) {
             console.error('Error fetching submissions:', error);
+            return res.status(500).json({message: 'Internal server error'});
+        }
+    }
+
+    static async getSummary(req: Request, res: Response): Promise<Response> {
+        try {
+            const pending = await Submission.count({where: {status: 'Pending'}});
+            const approved = await Submission.count({where: {status: 'Approved'}});
+            const rejected = await Submission.count({where: {status: 'Rejected'}});
+
+            return res.status(200).json({pending, approved, rejected});
+        } catch (error) {
+            console.error('Error fetching submission summary:', error);
+            return res.status(500).json({message: 'Internal server error'});
+        }
+    }
+
+    static async getRecentActivities(req: Request, res: Response): Promise<Response> {
+        try {
+            const recentActivities = await Submission.createQueryBuilder('submission')
+                .leftJoinAndSelect('submission.user', 'user')
+                .select([
+                    'submission.id',
+                    'submission.items',
+                    'submission.points',
+                    'submission.status',
+                    'submission.updatedAt',
+                    'user.firstName',
+                    'user.lastName'
+                ])
+                .orderBy('submission.updatedAt', 'DESC')
+                .limit(10)
+                .getMany();
+
+            const activities = recentActivities.map(submission => {
+                return {
+                    message: submission.status === 'Approved'
+                        ? `User "${submission.user.firstName} ${submission.user.lastName}" earned ${submission.points} points`
+                        : `User "${submission.user.firstName} ${submission.user.lastName}" submitted ${submission.items.length} items`,
+                    items: submission.items,
+                    points: submission.points,
+                    date: submission.updatedAt
+                };
+            });
+
+            return res.status(200).json(activities);
+        } catch (error) {
+            console.error('Error fetching recent activities:', error);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+
+    static async getUserSubmissions(req: Request, res: Response): Promise<Response> {
+        try {
+            const { userId } = req.params;
+            const submissions = await Submission.find({ where: { userId } });
+            return res.status(200).json(submissions);
+        } catch (error) {
+            console.error('Error fetching user submissions:', error);
             return res.status(500).json({ message: 'Internal server error' });
         }
     }

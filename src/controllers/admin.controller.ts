@@ -24,7 +24,7 @@ export class AdminController {
             await User.save(user);
             await Submission.save(submission);
 
-            return res.status(200).json({ message: 'Submission approved successfully' });
+            return res.status(200).json({ message: 'Submission approved' });
         } catch (error) {
             console.error('Error approving submission:', error);
             return res.status(500).json({ message: 'Internal server error' });

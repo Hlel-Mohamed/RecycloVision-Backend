@@ -150,6 +150,8 @@ router.put("/update/:id", auth, authorization(["Admin"]), UserController.updateU
  * @param {express.NextFunction} next - The next middleware function.
  */
 router.delete("/delete/:id", auth, authorization(["Admin"]), UserController.deleteUser)
+router.get('/summary', UserController.getSummary);
+
 
 router.get('/:id', UserController.getUserById);
 

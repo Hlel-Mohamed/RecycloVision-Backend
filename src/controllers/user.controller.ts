@@ -241,4 +241,18 @@ export class UserController {
       res.status(404).json("User not found")
     }
   }
+
+  static async getSummary(req: Request, res: Response): Promise<Response> {
+    try {
+      const totalUsers = await User.count();
+      const totalPoints = await User.createQueryBuilder('user')
+          .select('SUM(user.walletPoints)', 'sum')
+          .getRawOne();
+
+      return res.status(200).json({ totalUsers, totalPoints: totalPoints.sum });
+    } catch (error) {
+      console.error('Error fetching user summary:', error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  }
 }
